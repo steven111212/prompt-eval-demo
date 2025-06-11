@@ -10,17 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
-
-      - name: Cache promptfoo data
+      - name: Set up promptfoo cache
         uses: actions/cache@v3
         with:
           path: ~/.cache/promptfoo
@@ -33,43 +27,13 @@ jobs:
           npm install -g promptfoo
           promptfoo auth login --host https://www.promptfoo.app --api-key ${{ secrets.PROMPTFOO_API_KEY }}
 
-      - name: Run promptfoo evaluation
+      - name: Run and share promptfoo eval
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           promptfoo eval \
             -c prompts/promptfooconfig.yaml \
             --prompts prompts/**/*.txt \
-            --output output.json \
-            --share
-          echo "OUTPUT_JSON_PATH=$GITHUB_WORKSPACE/output.json" >> $GITHUB_ENV
+            --output output.json
 
-      - name: Comment PR with promptfoo results
-        uses: actions/github-script@v6
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const fs = require('fs');
-            const path = process.env.OUTPUT_JSON_PATH;
-            const output = JSON.parse(fs.readFileSync(path, 'utf8'));
-
-            const successes = output.results?.stats?.successes ?? 0;
-            const failures = output.results?.stats?.failures ?? 0;
-            const shareUrl = output.shareableUrl ?? 'N/A';
-
-            const body = `
-🔍 **Promptfoo 測試結果：**
-
-| ✅ 成功 | ❌ 失敗 |
-|--------|--------|
-| ${successes} | ${failures} |
-
-📎 [查看完整測試結果報告](${shareUrl})
-`;
-
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: body
-            });
+          promptfoo share 
