@@ -66,4 +66,12 @@ jobs:
             const failures = output.results?.stats?.failures ?? 0;
             const shareUrl = output.shareableUrl ?? 'N/A';
 
-            const body = `🔍 **Promptfoo 測試結果：**| ✅ 成功 | ❌ 失敗 ||--------|--------|| ${successes} | ${failures} |📎 [查看完整測試結果報告](${shareUrl})`;
+            const body = `
+🔍 **Promptfoo 測試結果：**
+
+| ✅ 成功 | ❌ 失敗 |
+|--------|--------|
+| ${successes} | ${failures} |
+
+📎 [查看完整測試結果報告](${shareUrl})
+`;
