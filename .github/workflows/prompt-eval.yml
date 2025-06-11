@@ -33,7 +33,7 @@ jobs:
         run: |
           promptfoo eval \
             -c prompts/promptfooconfig.yaml \
-            --prompts prompts/**/*.json \
+            --prompts prompts/**/*.txt \
             --output output.json
 
           promptfoo share 
