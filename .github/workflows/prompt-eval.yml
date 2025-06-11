@@ -28,6 +28,8 @@ jobs:
           promptfoo auth login --host https://www.promptfoo.app --api-key ${{ secrets.PROMPTFOO_API_KEY }}
 
       - name: Run and share promptfoo eval
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           promptfoo eval \
             -c prompts/promptfooconfig.yaml \
