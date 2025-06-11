@@ -36,4 +36,4 @@ jobs:
             --prompts prompts/**/*.json \
             --output output.json
 
-          promptfoo share -o output.json
+          promptfoo share 
