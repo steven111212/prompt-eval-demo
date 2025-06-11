@@ -6,7 +6,7 @@ providers:
       
 defaultTest:
   vars:
-    language: zh-tw
+    language: 繁體中文
 
 tests:
   - vars:

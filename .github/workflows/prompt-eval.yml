@@ -13,6 +13,7 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
+
       - name: Set up promptfoo cache
         uses: actions/cache@v3
         with:
@@ -21,7 +22,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-promptfoo-
 
-      - name: Run promptfoo evaluation
+      - name: Log in to Promptfoo Cloud
+        run: |
+          npx promptfoo auth login --host https://www.promptfoo.app --api-key ${{ secrets.PROMPTFOO_API_KEY }}
+
+      - name: Run promptfoo evaluation with share
         uses: promptfoo/promptfoo-action@v1
         with:
           openai-api-key: ${{ secrets.OPENAI_API_KEY }}
@@ -29,4 +34,4 @@ jobs:
           prompts: 'prompts/**/*.json'
           config: 'prompts/promptfooconfig.yaml'
           cache-path: ~/.cache/promptfoo
-          
+          share: true
