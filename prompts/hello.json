@@ -1,4 +1,0 @@
-{
-  "prompt": "Translate to Chinese: {{input}}",
-  "inputs": ["Hello", "How are you?"]
-}
