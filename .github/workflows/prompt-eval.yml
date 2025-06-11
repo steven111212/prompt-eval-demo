@@ -1,0 +1,29 @@
+name: 'Prompt Evaluation'
+
+on:
+  pull_request:
+    paths:
+      - 'prompts/**'  # 監看 prompts 資料夾底下的所有變動
+
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write  # 允許在 PR 上發留言
+    steps:
+      - name: Set up promptfoo cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/promptfoo
+          key: ${{ runner.os }}-promptfoo-v1
+          restore-keys: |
+            ${{ runner.os }}-promptfoo-
+
+      - name: Run promptfoo evaluation
+        uses: promptfoo/promptfoo-action@v1
+        with:
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          prompts: 'prompts/**/*.json'
+          config: 'prompts/promptfooconfig.yaml'
+          cache-path: ~/.cache/promptfoo
