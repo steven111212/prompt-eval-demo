@@ -1,4 +1,4 @@
 {
   "prompt": "Translate to Chinese: {{input}}",
-  "inputs": ["Hello", "How are you?"]
+  "inputs": ["Could I borrow some money from you?", "Whay day is today?"]
 }
