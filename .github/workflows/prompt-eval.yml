@@ -34,4 +34,3 @@ jobs:
           prompts: 'prompts/**/*.json'
           config: 'prompts/promptfooconfig.yaml'
           cache-path: ~/.cache/promptfoo
-          share: true
