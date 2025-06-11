@@ -22,15 +22,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-promptfoo-
 
-      - name: Log in to Promptfoo Cloud
+      - name: Install promptfoo & Log in
         run: |
-          npx promptfoo auth login --host https://www.promptfoo.app --api-key ${{ secrets.PROMPTFOO_API_KEY }}
+          npm install -g promptfoo
+          promptfoo auth login --host https://www.promptfoo.app --api-key ${{ secrets.PROMPTFOO_API_KEY }}
 
-      - name: Run promptfoo evaluation with share
-        uses: promptfoo/promptfoo-action@v1
-        with:
-          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          prompts: 'prompts/**/*.json'
-          config: 'prompts/promptfooconfig.yaml'
-          cache-path: ~/.cache/promptfoo
+      - name: Run evaluation and share
+        run: |
+          promptfoo eval \
+            -c prompts/promptfooconfig.yaml \
+            --prompts prompts/**/*.json \
+            --output output.json \
+            --share
