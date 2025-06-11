@@ -12,17 +12,8 @@ jobs:
       pull-requests: write
 
     steps:
-      - name: Checkout base ref (original)
+      - name: Checkout repo
         uses: actions/checkout@v3
-        with:
-          ref: ${{ github.base_ref }}
-          path: base
-
-      - name: Checkout head ref (modified)
-        uses: actions/checkout@v3
-        with:
-          ref: ${{ github.head_ref }}
-          path: head
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -47,8 +38,8 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           promptfoo eval \
-            -c head/prompts/promptfooconfig.yaml \
-            --prompts base/prompts/**/*.txt head/prompts/**/*.txt \
+            -c prompts/promptfooconfig.yaml \
+            --prompts prompts/**/*.txt \
             --output output.json \
             --share
           echo "OUTPUT_JSON_PATH=$GITHUB_WORKSPACE/output.json" >> $GITHUB_ENV
@@ -75,3 +66,10 @@ jobs:
 
 📎 [查看完整測試結果報告](${shareUrl})
 `;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });
