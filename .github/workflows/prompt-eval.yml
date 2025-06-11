@@ -3,14 +3,17 @@ name: 'Prompt Evaluation'
 on:
   pull_request:
     paths:
-      - 'prompts/**'  # 監看 prompts 資料夾底下的所有變動
+      - 'prompts/**'
 
 jobs:
   evaluate:
     runs-on: ubuntu-latest
     permissions:
-      pull-requests: write  # 允許在 PR 上發留言
+      pull-requests: write
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
       - name: Set up promptfoo cache
         uses: actions/cache@v3
         with:
