@@ -13,7 +13,6 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
-
       - name: Set up promptfoo cache
         uses: actions/cache@v3
         with:
@@ -21,7 +20,6 @@ jobs:
           key: ${{ runner.os }}-promptfoo-v1
           restore-keys: |
             ${{ runner.os }}-promptfoo-
-
       - name: Install promptfoo & Log in
         run: |
           npm install -g promptfoo
@@ -34,3 +32,13 @@ jobs:
             --prompts prompts/**/*.json \
             --output output.json \
             --share
+
+      - name: Run promptfoo evaluation
+        uses: promptfoo/promptfoo-action@v1
+        with:
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          prompts: 'prompts/**/*.json'
+          config: 'prompts/promptfooconfig.yaml'
+          cache-path: ~/.cache/promptfoo
+          
