@@ -1,0 +1,12 @@
+providers:
+  - id: openai:gpt-3.5-turbo
+    config:
+      model: gpt-3.5-turbo
+      apiKey: ${OPENAI_API_KEY}
+
+metrics:
+  - type: diff
+
+tests:
+  - prompt: ./hello.json
+    provider: openai:gpt-3.5-turbo
