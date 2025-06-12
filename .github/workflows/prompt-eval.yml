@@ -28,7 +28,6 @@ jobs:
           pip install -r requirements.txt
           pip install langchain langchain-openai langchain-community chromadb tqdm
 
-
       - name: Build vector DB (Chroma)
         run: |
           python ingest.py
@@ -41,7 +40,7 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           PROMPTFOO_API_KEY: ${{ secrets.PROMPTFOO_API_KEY }}
         run: |
-          eval_output=$(promptfoo eval \
+          eval_output=$(npx promptfoo eval \
             -c promptfooconfig.yaml \
             --share \
             --output output.json)
