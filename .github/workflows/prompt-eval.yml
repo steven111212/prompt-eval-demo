@@ -18,18 +18,21 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Set up promptfoo cache
-        uses: actions/cache@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
-          path: ~/.cache/promptfoo
-          key: ${{ runner.os }}-promptfoo-v1
-          restore-keys: |
-            ${{ runner.os }}-promptfoo-
+          python-version: '3.10'
 
-      - name: Install promptfoo & login
+      - name: Install dependencies
         run: |
-          npm install -g promptfoo
-          promptfoo auth login --host https://www.promptfoo.app --api-key ${{ secrets.PROMPTFOO_API_KEY }}
+          pip install -r requirements.txt
+          pip install langchain langchain-openai chromadb
+
+      - name: Build vector DB (Chroma)
+        run: |
+          python ingest.py
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
       - name: Run and share promptfoo eval
         id: eval
@@ -38,12 +41,13 @@ jobs:
           PROMPTFOO_API_KEY: ${{ secrets.PROMPTFOO_API_KEY }}
         run: |
           eval_output=$(promptfoo eval \
-            -c prompts/promptfooconfig.yaml \
+            -c promptfooconfig.yaml \
             --share \
             --output output.json)
 
           echo "$eval_output"
           echo "share_url=$(echo "$eval_output" | grep -o 'https://www\.promptfoo\.app/eval/[^ ]*')" >> $GITHUB_OUTPUT
+
 
 
       - name: Comment PR
