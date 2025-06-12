@@ -14,7 +14,7 @@ defaultTest:
     - type: context-relevance
       threshold: 0.7
   vars:
-    context: rag_context_loader.py
+    context: python:rag_context_loader.py
     # context: file://docs/maternity.md
 
 tests:
