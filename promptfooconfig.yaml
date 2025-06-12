@@ -1,0 +1,23 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+description: '台灣長照服務給付規定 RAG 問答系統測試'
+
+prompts:
+  - '{{query}}'
+
+providers:
+  - python:rag_provider.py:call_api
+
+defaultTest:
+  assert:
+    - type: answer-relevance
+      threshold: 0.7
+    - type: context-relevance
+      threshold: 0.7
+  vars:
+    context: python:rag_context_loader.py:get_var
+    inputVar: query
+    # context: file://docs/maternity.md
+
+tests:
+  - question.csv
+      
