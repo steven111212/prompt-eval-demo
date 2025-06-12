@@ -35,9 +35,10 @@ jobs:
         id: eval  # 加上 ID 讓 outputs 能被引用
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          PROMPTFOO_API_KEY: ${{ secrets.PROMPTFOO_API_KEY }}
         run: |
           eval_output=$(promptfoo eval \
-            -c prompts/promptfooconfig.yaml \
+            -c promptfooconfig.yaml \
             --share \
             --output output.json)
 
