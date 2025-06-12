@@ -4,9 +4,9 @@ prompts:
 providers:
   - id: openai:gpt-3.5-turbo
       
-# defaultTest:
-#   vars:
-#     language: 繁體中文
+defaultTest:
+  vars:
+    language: 繁體中文
 
 tests:
   - vars:
