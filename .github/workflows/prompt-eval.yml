@@ -53,13 +53,9 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           PROMPTFOO_API_KEY: ${{ secrets.PROMPTFOO_API_KEY }}
         run: |
-          eval_output=$(promptfoo eval \
-            -c promptfooconfig.yaml \
-            --share \
-            --output output.json)
-
-          echo "$eval_output"
-          echo "share_url=$(echo "$eval_output" | grep -o 'https://www\.promptfoo\.app/eval/[^ ]*')" >> $GITHUB_OUTPUT
+          set -e
+          promptfoo eval -c promptfooconfig.yaml --share --output output.json | tee eval.log
+          echo "share_url=$(grep -o 'https://www\.promptfoo\.app/eval/[^ ]*' eval.log)" >> $GITHUB_OUTPUT
 
 
 
