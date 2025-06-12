@@ -28,10 +28,12 @@ jobs:
           promptfoo auth login --host https://www.promptfoo.app --api-key ${{ secrets.PROMPTFOO_API_KEY }}
 
       - name: Run and share promptfoo eval
-        uses: promptfoo/promptfoo-action@v1
-        with:
-          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          prompts: 'prompts/**/*.json'
-          config: 'prompts/promptfooconfig.yaml'
-          cache-path: ~/.cache/promptfoo
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          promptfoo eval \
+            -c prompts/promptfooconfig.yaml \
+            --prompts prompts/**/*.txt \
+            --output output.json
+
+          promptfoo share 
