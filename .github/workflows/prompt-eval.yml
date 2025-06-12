@@ -45,6 +45,7 @@ jobs:
           script: |
             const fs = require('fs');
             const output = JSON.parse(fs.readFileSync('output.json', 'utf8'));
+            const shareUrl = '${{ steps.eval.outputs.share_url }}';
             const body = `⚠️ LLM prompt was modified.\n\n| Success | Failure |\n|---------|---------|\n| ${output.results.stats.successes}      | ${output.results.stats.failures}       |\n\n**» [View eval results](${output.shareableUrl}) «**`;
             github.rest.issues.createComment({
               issue_number: context.issue.number,
