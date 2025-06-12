@@ -32,18 +32,19 @@ jobs:
           promptfoo auth login --host https://www.promptfoo.app --api-key ${{ secrets.PROMPTFOO_API_KEY }}
 
       - name: Run and share promptfoo eval
-        id: eval  # 加上 ID 讓 outputs 能被引用
+        id: eval
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           PROMPTFOO_API_KEY: ${{ secrets.PROMPTFOO_API_KEY }}
         run: |
           eval_output=$(promptfoo eval \
-            -c promptfooconfig.yaml \
+            -c prompts/promptfooconfig.yaml \  # <-- 修正路徑
             --share \
             --output output.json)
 
           echo "$eval_output"
           echo "share_url=$(echo "$eval_output" | grep -o 'https://www\.promptfoo\.app/eval/[^ ]*')" >> $GITHUB_OUTPUT
+
 
       - name: Comment PR
         uses: actions/github-script@v6
