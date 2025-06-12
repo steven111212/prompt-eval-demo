@@ -5,7 +5,7 @@ prompts:
   - '{{query}}'
 
 providers:
-  - file://rag_provider.py
+  - rag_provider.py
 
 defaultTest:
   assert:
@@ -14,7 +14,7 @@ defaultTest:
     - type: context-relevance
       threshold: 0.7
   vars:
-    context: file://rag_context_loader.py
+    context: rag_context_loader.py
     # context: file://docs/maternity.md
 
 tests:
