@@ -7,7 +7,7 @@ from langchain.schema import AIMessage, HumanMessage
 from langchain_chroma import Chroma
 from langchain_core.documents import Document
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
-
+import traceback
 # 常數設定
 CHROMA_PATH: str = "longcare_db"
 OPENAI_AI_MODEL: str = "gpt-4o-mini"
@@ -131,10 +131,10 @@ def call_api(
         return result
         
     except Exception as e:
-        logging.error(f"❌ call_api 發生錯誤: {str(e)}")
+        # 在 CI log 中會看到這個錯誤內容
+        print("❌ ERROR in call_api():", e)
+        traceback.print_exc()
         return {
-            "output": f"抱歉，處理查詢時發生錯誤：{str(e)}",
-            "query": prompt,
+            "output": f"[ERROR] call_api failed: {e}",
             "context": [],
-            "metadata": {"error": str(e)}
         }
