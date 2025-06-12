@@ -5,7 +5,7 @@ prompts:
   - '{{query}}'
 
 providers:
-  - python:rag_context_loader.py:call_api
+  - python:rag_provider.py:call_api
 
 defaultTest:
   assert:
