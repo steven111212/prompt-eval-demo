@@ -38,12 +38,14 @@ jobs:
           PROMPTFOO_API_KEY: ${{ secrets.PROMPTFOO_API_KEY }}
         run: |
           eval_output=$(promptfoo eval \
-            -c prompts/promptfooconfig.yaml \  # <-- 修正路徑
+            -c promptfooconfig.yaml \
             --share \
             --output output.json)
 
           echo "$eval_output"
           echo "share_url=$(echo "$eval_output" | grep -o 'https://www\.promptfoo\.app/eval/[^ ]*')" >> $GITHUB_OUTPUT
+
+
 
 
       - name: Comment PR
