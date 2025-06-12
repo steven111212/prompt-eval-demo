@@ -28,14 +28,15 @@ jobs:
           promptfoo auth login --host https://www.promptfoo.app --api-key ${{ secrets.PROMPTFOO_API_KEY }}
 
       - name: Run and share promptfoo eval
+        id: eval  # 加上 ID 讓 outputs 能被引用
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
-          eval_output=$(promptfoo eval \ \
+          eval_output=$(promptfoo eval \
             -c prompts/promptfooconfig.yaml \
             --prompts prompts/**/*.txt \
             --share \
-            --output output.json
+            --output output.json)
 
           echo "$eval_output"
           echo "share_url=$(echo "$eval_output" | grep -o 'https://promptfoo\.app/eval/[^ ]*')" >> $GITHUB_OUTPUT
@@ -47,11 +48,16 @@ jobs:
           script: |
             const fs = require('fs');
             const output = JSON.parse(fs.readFileSync('output.json', 'utf8'));
-            const shareUrl = '${{ steps.eval.outputs.share_url }}';
-            const body = `⚠️ LLM prompt was modified.\n\n| Success | Failure |\n|---------|---------|\n| ${output.results.stats.successes}      | ${output.results.stats.failures}       |\n\n**» [View eval results](${output.shareableUrl}) «**`;
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: body
-            });
+            const shareUrl = `${{ steps.eval.outputs.share_url }}`;
+            const body = `⚠️ LLM prompt was modified.\n\n| Success | Failure |\n|---------|---------|\n| ${output.results.stats.successes}      | ${output.results.stats.failures}       |\n\n**» [View eval results](${shareUrl}) «**`;
+            
+            if (context.issue.number) {
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: body
+              });
+            } else {
+              console.warn('PR number is undefined; skipping comment.');
+            }
