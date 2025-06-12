@@ -18,6 +18,19 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
+      - name: Set up promptfoo cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/promptfoo
+          key: ${{ runner.os }}-promptfoo-v1
+          restore-keys: |
+            ${{ runner.os }}-promptfoo-
+
+      - name: Install promptfoo & login
+        run: |
+          npm install -g promptfoo
+          promptfoo auth login --host https://www.promptfoo.app --api-key ${{ secrets.PROMPTFOO_API_KEY }}
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -40,7 +53,7 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           PROMPTFOO_API_KEY: ${{ secrets.PROMPTFOO_API_KEY }}
         run: |
-          eval_output=$(npx promptfoo eval \
+          eval_output=$(promptfoo eval \
             -c promptfooconfig.yaml \
             --share \
             --output output.json)
