@@ -31,7 +31,7 @@ jobs:
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
-          promptfoo eval -c prompts/promptfooconfig.yaml --prompts prompts/**/*.txt -o --output output.json --share\
+          promptfoo eval -c prompts/promptfooconfig.yaml \
             -c prompts/promptfooconfig.yaml \
             --prompts prompts/**/*.txt \
             --output output.json
